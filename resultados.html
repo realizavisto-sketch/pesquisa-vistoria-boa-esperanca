@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel do pesquisador — Resultados SERVQUAL</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>Painel do pesquisador</h1>
+<p class="sub">Resultados organizados para o TCC · ECV de Boa Esperança (MG) · SERVQUAL / SERVPERF</p>
+</div></header>
+<main>
+<div class="card">
+<p id="status" class="muted">Carregando respostas…</p>
+<div class="noprint">
+<button type="button" id="reloadBtn" class="secondary">Atualizar</button>
+<button type="button" id="csvRawBtn" class="secondary">Baixar CSV bruto</button>
+<button type="button" id="csvSumBtn" class="secondary">Baixar CSV resumo</button>
+<button type="button" id="jsonBtn" class="secondary">Baixar JSON</button>
+<button type="button" id="tccBtn" class="secondary">Copiar texto pronto para o TCC</button>
+<a class="btn secondary" href="/qr.html">QR Code</a>
+<a class="btn secondary" href="/">Questionário</a>
+</div>
+</div>
+
+<div id="content" hidden>
+<section class="card">
+<h2>Amostra</h2>
+<p id="sample"></p>
+<h3>Seção A — Perfil do atendimento</h3>
+<div id="sectionA"></div>
+</section>
+
+<section class="card">
+<h2>Dimensões SERVQUAL — médias</h2>
+<p class="muted small">Escore da dimensão = média dos escores individuais (cada respondente: média dos itens válidos da dimensão). NS/NA é excluído das médias e contado à parte. Escala: 1 a 5.</p>
+<div id="dimensions"></div>
+</section>
+
+<section class="card">
+<h2>Itens — detalhamento</h2>
+<div id="itemsTable"></div>
+</section>
+
+<section class="card">
+<h2>Seção C — Comparação com o modelo antigo</h2>
+<p class="muted small">Somente respondentes que fizeram vistoria no modelo antigo (A3 = Sim). Escala: 1 = Muito pior até 5 = Muito melhor.</p>
+<div id="comparison"></div>
+</section>
+
+<section class="card">
+<h2>Seção D — Avaliação geral</h2>
+<div id="general"></div>
+</section>
+
+<section class="card">
+<h2>Como citar estes resultados no TCC</h2>
+<ul>
+<li>Reporte sempre o <strong>n total</strong> e, em cada item/dimensão, o <strong>n válido</strong> (excluindo NS/NA).</li>
+<li>Indique o período da coleta e que a amostra é de usuários atendidos na ECV de Boa Esperança (MG), por adesão voluntária e anônima.</li>
+<li>Não generalize para todo o estado de Minas Gerais a partir desta amostra local sem deixar essa limitação explícita.</li>
+<li>Use o botão “Copiar texto pronto para o TCC” para obter as tabelas em Markdown com esses cuidados já incluídos.</li>
+</ul>
+</section>
+
+<section class="card noprint">
+<h2>Encerrar a coleta / limpar dados de teste</h2>
+<p class="muted small">Use apenas quando tiver certeza. Esta ação apaga todas as respostas registradas e não pode ser desfeita.</p>
+<label>Chave do pesquisador <input type="password" id="adminKey" autocomplete="off"></label>
+<p><button type="button" id="resetBtn" style="background:#922b21">Apagar todas as respostas</button></p>
+<p id="resetMsg" class="error"></p>
+</section>
+</div>
+</main>
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code — Pesquisa de campo</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>QR Code da pesquisa</h1>
+<p class="sub">Imprima esta página e fixe-a no local de atendimento da ECV de Boa Esperança (MG)</p>
+</div></header>
+<main>
+<div class="card qrwrap">
+<h2>Escaneie e responda — anônimo, cerca de 5 minutos</h2>
+<p id="formUrl" class="muted"></p>
+<img id="qrImg" alt="QR Code para o questionário da pesquisa de campo">
+<p class="muted small">Se o QR Code não abrir, digite o endereço acima no navegador do celular.</p>
+<div class="noprint" style="margin-top:16px">
+<button type="button" onclick="window.print()">Imprimir esta página</button>
+<a class="btn secondary" href="/">Abrir o questionário</a>
+<a class="btn secondary" href="/resultados.html">Painel do pesquisador</a>
+</div>
+</div>
+<div class="card">
+<h2>Como aplicar</h2>
+<ol>
+<li>Imprima esta página em A4 e deixe-a visível no balcão, sem induzir respostas.</li>
+<li>Informe que a participação é anônima, voluntária e apenas para fins acadêmicos.</li>
+<li>Não colete nome, CPF, placa ou telefone de nenhum respondente.</li>
+<li>Acompanhe as respostas no painel do pesquisador e exporte os dados quando encerrar a coleta.</li>
+<li>Antes de usar os números no TCC, anote o período da coleta e o total de respondentes (n) — o painel já mostra essas informações.</li>
+</ol>
+</div>
+</main>
+<script>
+const url = window.location.origin + '/';
+document.getElementById('formUrl').textContent = url;
+document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=' + encodeURIComponent(url);
+</script>
+</body>
+</html>

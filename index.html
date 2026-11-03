@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pesquisa de campo — Vistoria veicular em Boa Esperança (MG)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>Pesquisa de campo — Vistoria veicular</h1>
+<p class="sub">ECV de Boa Esperança (MG) · Trabalho de Conclusão de Curso em Administração</p>
+</div></header>
+<main>
+<div class="card">
+<p><strong>Este questionário é anônimo e voluntário.</strong> Não escreva nome, CPF, placa, telefone, e-mail ou qualquer dado que identifique você. Você pode parar de responder a qualquer momento, sem prejuízo. As respostas serão usadas apenas para fins acadêmicos, de forma agregada, sem identificação de respondentes.</p>
+<p class="muted">Tempo estimado: cerca de 5 minutos. Modelo SERVQUAL, versão percepção (SERVPERF).</p>
+<p id="formError" class="error" role="alert"></p>
+</div>
+
+<form id="survey" novalidate>
+<section class="card" id="sectionA">
+<h2>A — Sobre o atendimento de hoje</h2>
+<fieldset>
+<legend>A1. Qual foi o motivo da vistoria de hoje?</legend>
+<div class="opts" id="a1opts"></div>
+</fieldset>
+<fieldset>
+<legend>A2. Você mora em Boa Esperança?</legend>
+<div class="opts">
+<label><input type="radio" name="A2" value="sim" required> Sim, moro em Boa Esperança</label>
+<label><input type="radio" name="A2" value="nao" required> Não, moro em outro município</label>
+</div>
+</fieldset>
+<fieldset>
+<legend>A3. Você já fez vistoria no modelo antigo, da Polícia Civil / Ciretran?</legend>
+<div class="opts">
+<label><input type="radio" name="A3" value="sim" required> Sim</label>
+<label><input type="radio" name="A3" value="nao" required> Não</label>
+</div>
+</fieldset>
+<p class="muted small">Se você marcou NÃO na A3, responda as Seções B e D e pule a Seção C.</p>
+</section>
+
+<section class="card">
+<h2>B — Qualidade percebida do serviço na ECV</h2>
+<p class="muted">Marque de 1 a 5 o quanto você concorda com cada afirmação sobre o atendimento de hoje. Marque NS/NA somente se você não souber ou se a afirmação não se aplicar ao seu atendimento de hoje.</p>
+<p><strong>Escala:</strong> 1 = Discordo totalmente · 2 = Discordo · 3 = Nem concordo, nem discordo · 4 = Concordo · 5 = Concordo totalmente · NS/NA = Não sei / Não se aplica</p>
+<div id="sectionB"></div>
+</section>
+
+<section class="card" id="sectionC" hidden>
+<h2>C — Comparação com o modelo antigo</h2>
+<p class="muted">Responda SOMENTE se marcou SIM na A3.</p>
+<p><strong>Escala:</strong> 1 = Muito pior que o modelo antigo · 2 = Pior · 3 = Igual · 4 = Melhor · 5 = Muito melhor que o modelo antigo · NS/NA</p>
+<div id="sectionCItems"></div>
+</section>
+
+<section class="card">
+<h2>D — Avaliação geral</h2>
+<p class="muted">Use a mesma escala de 1 a 5 da Seção B.</p>
+<div id="sectionD"></div>
+</section>
+
+<button type="submit" id="submitBtn">Enviar resposta anônima</button>
+<p class="muted small">Ao enviar, nenhuma informação pessoal é coletada. O envio registra apenas as respostas do questionário e a data/hora do envio.</p>
+</form>
+
+<div id="thanks" class="card success" hidden>
+<h2>Obrigado pela participação!</h2>
+<p>Sua resposta foi registrada de forma anônima.</p>
+<button type="button" id="againBtn" class="secondary">Responder novamente (outro participante)</button>
+</div>
+</main>
+<script type="module" src="form.js"></script>
+</body>
+</html>
