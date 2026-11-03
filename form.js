@@ -38,6 +38,21 @@ function radioGroup(key, labels) {
 const scaleB = [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['nsna', 'NS / NA']];
 const scaleC = [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['nsna', 'NS / NA']];
 
+const ecvParam = new URLSearchParams(window.location.search).get('ecv');
+const ecvEl = document.getElementById('ecvopts');
+for (const v of ['1', '2', '3', '4']) {
+  const lab = document.createElement('label');
+  const input = document.createElement('input');
+  input.type = 'radio'; input.name = 'ecv'; input.value = v; input.required = true;
+  if (ecvParam === v) input.checked = true;
+  lab.append(input, document.createTextNode(` ECV ${v}`));
+  ecvEl.appendChild(lab);
+}
+if (ecvParam && ['1', '2', '3', '4'].includes(ecvParam)) {
+  document.getElementById('ecvNote').textContent = `Você está respondendo sobre a ECV ${ecvParam} de Boa Esperança (MG), conforme o QR Code da unidade.`;
+  ecvEl.querySelectorAll('input').forEach((i) => { i.disabled = i.value !== ecvParam; });
+}
+
 const a1 = document.getElementById('a1opts');
 for (const [value, label] of A1_OPTIONS) {
   const lab = document.createElement('label');
@@ -86,6 +101,7 @@ form.addEventListener('submit', async (e) => {
   btn.disabled = true; btn.textContent = 'Enviando…';
   try {
     const payload = {
+      ecv: getValue('ecv'),
       A1: getValue('A1'),
       A2: getValue('A2'),
       A3: getValue('A3'),
@@ -93,6 +109,7 @@ form.addEventListener('submit', async (e) => {
     const keys = ['T1', 'T2', 'T4', 'C1', 'C2', 'C3', 'R1', 'R2', 'R3', 'S1', 'S2', 'S4', 'E1', 'E2', 'E3', 'D1', 'D3'];
     if (payload.A3 === 'sim') keys.push('CP1', 'CP4');
     const missing = [];
+    if (!payload.ecv) missing.push('ECV');
     if (!payload.A1) missing.push('A1');
     if (!payload.A2) missing.push('A2');
     if (!payload.A3) missing.push('A3');

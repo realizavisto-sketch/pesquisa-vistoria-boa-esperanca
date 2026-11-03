@@ -2,6 +2,7 @@ import { aggregate, toCsvRaw, toCsvSummary, ITEMS } from './lib/aggregate.js';
 
 let currentResponses = [];
 let currentAgg = null;
+let fullAgg = null;
 
 const fmt = (v, digits = 2) => (v === null || v === undefined ? '—' : Number(v).toFixed(digits));
 const pct = (v) => (v === null ? '—' : `${Number(v).toFixed(1)}%`);
@@ -22,17 +23,31 @@ async function load() {
     if (!res.ok) throw new Error('Falha ao carregar respostas.');
     const data = await res.json();
     currentResponses = data.responses || [];
-    currentAgg = aggregate(currentResponses);
-    render();
+    fullAgg = aggregate(currentResponses);
+    applyFilter();
     document.getElementById('content').hidden = false;
-    status.textContent = `Total de respostas registradas: ${currentAgg.total}.`;
+    status.textContent = `Total de respostas registradas: ${fullAgg.total}.`;
   } catch (err) {
     status.textContent = `Erro: ${err.message}`;
   }
 }
 
+function applyFilter() {
+  const filter = document.getElementById('ecvFilter')?.value || 'all';
+  if (filter === 'all') currentAgg = fullAgg;
+  else currentAgg = aggregate(currentResponses.filter((r) => (r.ecv || 'nao-identificada') === filter));
+  render();
+}
+
 function render() {
   const agg = currentAgg;
+  const full = fullAgg || agg;
+  const byEcvRows = Object.entries(full.byEcv || {}).map(([ecv, sub]) => {
+    const dims = sub.dimensions.map((d) => `${d.dim}: ${fmt(d.mean)} (n=${d.n})`).join(' · ');
+    return `<tr><td>ECV ${ecv}</td><td class="num">${sub.total}</td><td>${dims}</td><td class="num">${fmt(sub.D1.mean)}</td><td class="num">${fmt(sub.D3.mean)}</td></tr>`;
+  }).join('');
+  document.getElementById('byEcv').innerHTML =
+    `<table><tr><th>Unidade</th><th class="num">n</th><th>Dimensões (média)</th><th class="num">D1 Satisfação</th><th class="num">D3 Preço justo</th></tr>${byEcvRows || '<tr><td colspan="5">Nenhuma resposta ainda.</td></tr>'}</table>`;
   document.getElementById('sample').innerHTML =
     `<strong>n = ${agg.total}</strong> respostas · Primeira: ${fmtDate(agg.firstAt)} · Última: ${fmtDate(agg.lastAt)}`;
 
@@ -72,7 +87,17 @@ function render() {
 function tccText() {
   const agg = currentAgg;
   const lines = [];
-  lines.push('## Resultados da pesquisa de campo — ECV de Boa Esperança (MG)');
+  lines.push('## Resultados da pesquisa de campo — ECVs de Boa Esperança (MG)');
+  if (fullAgg && fullAgg.byEcv) {
+    lines.push('');
+    lines.push('### Amostra por ECV');
+    lines.push('');
+    lines.push('| Unidade | n | D1 Satisfação (média) | D3 Preço justo (média) |');
+    lines.push('|---|---:|---:|---:|');
+    for (const [ecv, sub] of Object.entries(fullAgg.byEcv)) {
+      lines.push(`| ECV ${ecv} | ${sub.total} | ${fmt(sub.D1.mean)} | ${fmt(sub.D3.mean)} |`);
+    }
+  }
   lines.push('');
   lines.push(`Amostra: n = ${agg.total} respostas anônimas e voluntárias. Período: ${fmtDate(agg.firstAt)} a ${fmtDate(agg.lastAt)}.`);
   lines.push('Instrumento: SERVQUAL, versão percepção (SERVPERF), escala de 1 a 5, com opção NS/NA. NS/NA foi excluído das médias e contado à parte.');
@@ -108,6 +133,7 @@ function tccText() {
 }
 
 document.getElementById('reloadBtn').addEventListener('click', load);
+document.getElementById('ecvFilter').addEventListener('change', applyFilter);
 document.getElementById('csvRawBtn').addEventListener('click', () => download('respostas-brutas-servqual.csv', toCsvRaw(currentResponses)));
 document.getElementById('csvSumBtn').addEventListener('click', () => download('resumo-servqual.csv', toCsvSummary(currentAgg)));
 document.getElementById('jsonBtn').addEventListener('click', () => download('respostas-servqual.json', JSON.stringify(currentResponses, null, 2), 'application/json'));

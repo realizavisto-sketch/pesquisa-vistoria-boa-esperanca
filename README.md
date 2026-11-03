@@ -4,8 +4,8 @@ Ferramenta para aplicar, via QR Code, o questionário de pesquisa de campo do TC
 
 ## O que a ferramenta faz
 
-- **Questionário (`/`)**: versão digital fiel ao questionário SERVQUAL, versão percepção (SERVPERF), enviado para o TCC. Anônimo e voluntário: não coleta nome, CPF, placa, telefone ou e-mail.
-- **QR Code (`/qr.html`)**: gera automaticamente o QR Code do endereço do questionário em produção. Imprima a página em A4 e fixe-a no local de atendimento.
+- **Questionário (`/`)**: versão digital fiel ao questionário SERVQUAL, versão percepção (SERVPERF), enviado para o TCC. Anônimo e voluntário: não coleta nome, CPF, placa, telefone ou e-mail. Cada resposta é marcada com a ECV de Boa Esperança (1, 2, 3 ou 4) — por QR Code específico da unidade ou por seleção no início do formulário.
+- **QR Codes (`/qr.html`)**: gera automaticamente 4 QR Codes, um por ECV, cada um abrindo o questionário com a unidade já selecionada e travada. Imprima a página de cada unidade e fixe-a no local de atendimento correspondente.
 - **Painel do pesquisador (`/resultados.html`)**: agrega as respostas em tempo real e entrega:
   - total de respostas (n) e período da coleta;
   - perfil da Seção A (motivo, mora em Boa Esperança, modelo antigo);

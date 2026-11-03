@@ -9,7 +9,7 @@
 <body>
 <header class="hero"><div class="wrap">
 <h1>Pesquisa de campo — Vistoria veicular</h1>
-<p class="sub">ECV de Boa Esperança (MG) · Trabalho de Conclusão de Curso em Administração</p>
+<p class="sub">ECVs de Boa Esperança (MG) · Trabalho de Conclusão de Curso em Administração</p>
 </div></header>
 <main>
 <div class="card">
@@ -19,6 +19,15 @@
 </div>
 
 <form id="survey" novalidate>
+<section class="card" id="sectionEcv">
+<h2>Unidade de atendimento</h2>
+<p id="ecvNote" class="muted">Se você chegou pelo QR Code da unidade, a ECV já vem selecionada. Caso contrário, marque a ECV onde você foi atendido hoje. Isso serve apenas para organizar os resultados por unidade, sem identificar você.</p>
+<fieldset>
+<legend>Em qual ECV de Boa Esperança você foi atendido hoje?</legend>
+<div class="opts" id="ecvopts"></div>
+</fieldset>
+</section>
+
 <section class="card" id="sectionA">
 <h2>A — Sobre o atendimento de hoje</h2>
 <fieldset>

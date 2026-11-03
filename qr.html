@@ -3,41 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR Code — Pesquisa de campo</title>
+<title>QR Codes — Pesquisa de campo (4 ECVs)</title>
 <link rel="stylesheet" href="styles.css">
+<style>@media print{.qrpage{page-break-after:always}}</style>
 </head>
 <body>
 <header class="hero"><div class="wrap">
-<h1>QR Code da pesquisa</h1>
-<p class="sub">Imprima esta página e fixe-a no local de atendimento da ECV de Boa Esperança (MG)</p>
+<h1>QR Codes da pesquisa</h1>
+<p class="sub">Um QR Code para cada ECV de Boa Esperança (MG) · Imprima a página de cada unidade e fixe-a no local de atendimento</p>
 </div></header>
 <main>
-<div class="card qrwrap">
-<h2>Escaneie e responda — anônimo, cerca de 5 minutos</h2>
-<p id="formUrl" class="muted"></p>
-<img id="qrImg" alt="QR Code para o questionário da pesquisa de campo">
-<p class="muted small">Se o QR Code não abrir, digite o endereço acima no navegador do celular.</p>
-<div class="noprint" style="margin-top:16px">
-<button type="button" onclick="window.print()">Imprimir esta página</button>
+<div class="card noprint">
+<p>Esta página gera 4 QR Codes, um por unidade. Cada QR já abre o questionário com a ECV correspondente selecionada e travada, para organizar os resultados por unidade sem identificar o respondente.</p>
+<div>
+<button type="button" onclick="window.print()">Imprimir todas as páginas</button>
 <a class="btn secondary" href="/">Abrir o questionário</a>
 <a class="btn secondary" href="/resultados.html">Painel do pesquisador</a>
 </div>
+<p class="muted small">Mapeamento sugerido para as suas anotações privadas (não está no código): anote qual empresa real corresponde a ECV 1, 2, 3 e 4, e guarde essa lista separada dos resultados. No TCC, apresente as unidades por código, salvo autorização expressa da empresa para ser nomeada.</p>
 </div>
+
+<div id="qrPages"></div>
+
 <div class="card">
 <h2>Como aplicar</h2>
 <ol>
-<li>Imprima esta página em A4 e deixe-a visível no balcão, sem induzir respostas.</li>
+<li>Imprima apenas a página da ECV correspondente e fixe-a no balcão daquela unidade, sem induzir respostas.</li>
 <li>Informe que a participação é anônima, voluntária e apenas para fins acadêmicos.</li>
 <li>Não colete nome, CPF, placa ou telefone de nenhum respondente.</li>
-<li>Acompanhe as respostas no painel do pesquisador e exporte os dados quando encerrar a coleta.</li>
-<li>Antes de usar os números no TCC, anote o período da coleta e o total de respondentes (n) — o painel já mostra essas informações.</li>
+<li>Acompanhe as respostas no painel do pesquisador, com quebra por ECV, e exporte os dados quando encerrar a coleta.</li>
+<li>Antes de usar os números no TCC, anote o período da coleta e o total de respondentes (n) por ECV e no total — o painel já mostra essas informações.</li>
 </ol>
 </div>
 </main>
 <script>
-const url = window.location.origin + '/';
-document.getElementById('formUrl').textContent = url;
-document.getElementById('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=' + encodeURIComponent(url);
+const pages = document.getElementById('qrPages');
+for (const ecv of ['1', '2', '3', '4']) {
+  const url = window.location.origin + '/?ecv=' + ecv;
+  const div = document.createElement('div');
+  div.className = 'card qrwrap qrpage';
+  div.innerHTML = `<h2>ECV ${ecv} — Boa Esperança (MG)</h2><p>Escaneie e responda — anônimo, cerca de 5 minutos</p><p class="muted">${url}</p>`;
+  const img = document.createElement('img');
+  img.alt = `QR Code para o questionário da ECV ${ecv}`;
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=' + encodeURIComponent(url);
+  div.appendChild(img);
+  div.insertAdjacentHTML('beforeend', '<p class="muted small">Se o QR Code não abrir, digite o endereço acima no navegador do celular.</p>');
+  pages.appendChild(div);
+}
 </script>
 </body>
 </html>
