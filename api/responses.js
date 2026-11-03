@@ -4,22 +4,28 @@ import { validateResponse, sanitizeResponse } from '../lib/validate.js';
 const KEY = 'responses.json';
 
 async function loadResponses() {
-  // Para blobs privados, a URL retornada por list() pode exigir
-  // autenticação; por isso o blob de respostas é público (os dados
-  // já são anônimos e a própria API os lista). Se o blob ainda não
-  // existir, retorna lista vazia.
+  // O store é privado, então o download do blob exige o token de
+  // leitura/escrita no cabeçalho Authorization. Sem ele, o fetch
+  // retorna 403 e a lista voltaria vazia (ou o POST falharia ao
+  // tentar sobrescrever um blob que não foi lido).
   const { blobs } = await list({ prefix: KEY });
   const blob = blobs.find((b) => b.pathname === KEY);
   if (!blob) return [];
-  const res = await fetch(blob.url);
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const res = await fetch(blob.downloadUrl || blob.url, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
   if (!res.ok) return [];
   const data = await res.json();
   return Array.isArray(data) ? data : [];
 }
 
 async function saveResponses(responses) {
+  // O store foi criado com acesso privado, então o put também deve
+  // usar 'private' — usar 'public' aqui gera o erro
+  // "Cannot use public access on a private store".
   await put(KEY, JSON.stringify(responses, null, 2), {
-    access: 'public',
+    access: 'private',
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: 'application/json',
