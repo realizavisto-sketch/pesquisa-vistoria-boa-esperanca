@@ -14,13 +14,26 @@
 </div></header>
 <main>
 <div class="card noprint">
-<p>Esta página gera 4 QR Codes, um por unidade. Cada QR já abre o questionário com a ECV correspondente selecionada e travada, para organizar os resultados por unidade sem identificar o respondente.</p>
+<p>Esta página gera 4 QR Codes, um por unidade. Cada QR já abre o questionário com a empresa correspondente selecionada, para organizar os resultados por unidade sem identificar o respondente.</p>
 <div>
 <button type="button" onclick="window.print()">Imprimir todas as páginas</button>
 <a class="btn secondary" href="/">Abrir o questionário</a>
 <a class="btn secondary" href="/resultados.html">Painel do pesquisador</a>
 </div>
-<p class="muted small">Mapeamento sugerido para as suas anotações privadas (não está no código): anote qual empresa real corresponde a ECV 1, 2, 3 e 4, e guarde essa lista separada dos resultados. No TCC, apresente as unidades por código, salvo autorização expressa da empresa para ser nomeada.</p>
+<p><strong>Como saber qual QR é de qual empresa (só para você, pesquisador):</strong> as páginas dos QR Codes mostram apenas o código ECV 1 a 4, sem o nome da empresa, para o respondente. A primeira página impressa abaixo é a folha do pesquisador, com o mapeamento — <strong>não fixe essa folha na parede</strong>, guarde-a com você e entregue apenas a página do código certo em cada empresa.</p>
+</div>
+
+<div class="card qrpage">
+<h2>FOLHA DO PESQUISADOR — NÃO FIXAR NA PAREDE</h2>
+<p>Use esta folha apenas para saber qual QR Code entregar em cada empresa:</p>
+<table>
+<tr><th>Código no QR</th><th>Empresa — entregar esta página do QR nela</th></tr>
+<tr><td>ECV 1</td><td>Realiza Vistoria LTDA</td></tr>
+<tr><td>ECV 2</td><td>WR Vistorias LTDA</td></tr>
+<tr><td>ECV 3</td><td>BOA ESPERANÇA Vistoria LTDA</td></tr>
+<tr><td>ECV 4</td><td>Triângulo Vistorias LTDA</td></tr>
+</table>
+<p class="muted small">No questionário, o respondente já vê o nome da empresa. No painel do pesquisador, os resultados também aparecem com o nome da empresa. No TCC, apresente as unidades por código, salvo autorização expressa da empresa para ser nomeada (ver a carta de autorização).</p>
 </div>
 
 <div id="qrPages"></div>

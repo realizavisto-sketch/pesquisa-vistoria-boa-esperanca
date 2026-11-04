@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { aggregate, toCsvRaw } from '../lib/aggregate.js';
-import { validateResponse, sanitizeResponse } from '../lib/validate.js';
+import { validateResponse, sanitizeResponse, ECV_NAMES } from '../lib/validate.js';
 
 const base = (over = {}) => ({
   ecv: '1', A1: 'transferencia', A2: 'sim', A3: 'sim',
@@ -13,6 +13,8 @@ const base = (over = {}) => ({
 assert.deepStrictEqual(validateResponse(base()), []);
 assert.ok(validateResponse(base({ ecv: '9' })).length > 0);
 assert.ok(validateResponse(base({ ecv: undefined })).length > 0);
+assert.strictEqual(ECV_NAMES['1'], 'Realiza Vistoria LTDA');
+assert.strictEqual(ECV_NAMES['4'], 'Triângulo Vistorias LTDA');
 assert.ok(validateResponse({ ...base(), T1: undefined }).length > 0);
 assert.ok(validateResponse(base({ A3: 'nao', CP1: 5 })).length > 0);
 assert.deepStrictEqual(validateResponse(base({ A3: 'nao', CP1: null, CP4: null })).filter((e) => e.includes('CP')), []);

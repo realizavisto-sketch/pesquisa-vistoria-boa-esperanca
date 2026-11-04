@@ -38,6 +38,12 @@ function radioGroup(key, labels) {
 const scaleB = [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['nsna', 'NS / NA']];
 const scaleC = [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['nsna', 'NS / NA']];
 
+const ECV_NAMES = {
+  '1': 'Realiza Vistoria LTDA',
+  '2': 'WR Vistorias LTDA',
+  '3': 'BOA ESPERANÇA Vistoria LTDA',
+  '4': 'Triângulo Vistorias LTDA',
+};
 const ecvParam = new URLSearchParams(window.location.search).get('ecv');
 const ecvEl = document.getElementById('ecvopts');
 for (const v of ['1', '2', '3', '4']) {
@@ -45,11 +51,11 @@ for (const v of ['1', '2', '3', '4']) {
   const input = document.createElement('input');
   input.type = 'radio'; input.name = 'ecv'; input.value = v; input.required = true;
   if (ecvParam === v) input.checked = true;
-  lab.append(input, document.createTextNode(` ECV ${v}`));
+  lab.append(input, document.createTextNode(` ${ECV_NAMES[v]}`));
   ecvEl.appendChild(lab);
 }
 if (ecvParam && ['1', '2', '3', '4'].includes(ecvParam)) {
-  document.getElementById('ecvNote').textContent = `Você está respondendo sobre a ECV ${ecvParam} de Boa Esperança (MG), conforme o QR Code da unidade.`;
+  document.getElementById('ecvNote').textContent = `Você está respondendo sobre a ${ECV_NAMES[ecvParam]}, em Boa Esperança (MG), conforme o QR Code da unidade.`;
   ecvEl.querySelectorAll('input').forEach((i) => { i.disabled = i.value !== ecvParam; });
 }
 

@@ -42,9 +42,16 @@ function applyFilter() {
 function render() {
   const agg = currentAgg;
   const full = fullAgg || agg;
+  const ECV_NAMES = {
+    '1': 'Realiza Vistoria LTDA',
+    '2': 'WR Vistorias LTDA',
+    '3': 'BOA ESPERANÇA Vistoria LTDA',
+    '4': 'Triângulo Vistorias LTDA',
+    'nao-identificada': 'Não identificada',
+  };
   const byEcvRows = Object.entries(full.byEcv || {}).map(([ecv, sub]) => {
     const dims = sub.dimensions.map((d) => `${d.dim}: ${fmt(d.mean)} (n=${d.n})`).join(' · ');
-    return `<tr><td>ECV ${ecv}</td><td class="num">${sub.total}</td><td>${dims}</td><td class="num">${fmt(sub.D1.mean)}</td><td class="num">${fmt(sub.D3.mean)}</td></tr>`;
+    return `<tr><td>ECV ${ecv} — ${ECV_NAMES[ecv] || ''}</td><td class="num">${sub.total}</td><td>${dims}</td><td class="num">${fmt(sub.D1.mean)}</td><td class="num">${fmt(sub.D3.mean)}</td></tr>`;
   }).join('');
   document.getElementById('byEcv').innerHTML =
     `<table><tr><th>Unidade</th><th class="num">n</th><th>Dimensões (média)</th><th class="num">D1 Satisfação</th><th class="num">D3 Preço justo</th></tr>${byEcvRows || '<tr><td colspan="5">Nenhuma resposta ainda.</td></tr>'}</table>`;
