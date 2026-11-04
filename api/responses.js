@@ -1,34 +1,43 @@
-import { list, put } from '@vercel/blob';
+import { list, put, del } from '@vercel/blob';
 import { validateResponse, sanitizeResponse } from '../lib/validate.js';
 
-const KEY = 'responses.json';
+// Cada resposta é um blob próprio (responses/<id>.json), em vez de um
+// único arquivo responses.json lido-modificado-escrito. O modelo antigo
+// perdia respostas: o list() pode devolver várias versões do mesmo
+// pathname e o find() pegava a versão antiga, sobrescrevendo as novas.
+// Com um arquivo por resposta não há leitura prévia nem corrida entre
+// envios simultâneos no campo.
+const PREFIX = 'responses/';
+const LEGACY_KEY = 'responses.json';
 
-async function loadResponses() {
-  // O store é público (acesso fixo na criação, não pode ser alterado
-  // depois). Por isso o download funciona sem Authorization. Um store
-  // privado rejeita o put simples com "Cannot use public access on a
-  // private store" / "access must be public" — foi exatamente o erro
-  // que travou o envio na primeira versão.
-  const { blobs } = await list({ prefix: KEY });
-  const blob = blobs.find((b) => b.pathname === KEY);
-  if (!blob) return [];
-  const res = await fetch(blob.url);
-  if (!res.ok) return [];
-  const data = await res.json();
-  return Array.isArray(data) ? data : [];
+async function fetchJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  try { return await res.json(); } catch { return null; }
 }
 
-async function saveResponses(responses) {
-  // Store público: put com access 'public'. As respostas já são
-  // anônimas (sem nome, CPF, placa ou contato) e a própria API as
-  // lista no painel do pesquisador, então o blob público não expõe
-  // nenhum dado pessoal a mais.
-  await put(KEY, JSON.stringify(responses, null, 2), {
-    access: 'public',
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: 'application/json',
-  });
+async function loadResponses() {
+  const out = [];
+  const seen = new Set();
+  const { blobs } = await list({ prefix: PREFIX });
+  for (const blob of blobs) {
+    if (!blob.pathname.endsWith('.json')) continue;
+    const data = await fetchJson(blob.url);
+    if (data && data.id && !seen.has(data.id)) { seen.add(data.id); out.push(data); }
+  }
+  // Compatibilidade: arquivo único da primeira versão, se existir.
+  const legacy = await list({ prefix: LEGACY_KEY });
+  const old = legacy.blobs.find((b) => b.pathname === LEGACY_KEY);
+  if (old) {
+    const data = await fetchJson(old.url);
+    if (Array.isArray(data)) {
+      for (const r of data) {
+        if (r && r.id && !seen.has(r.id)) { seen.add(r.id); out.push(r); }
+      }
+    }
+  }
+  out.sort((a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')));
+  return out;
 }
 
 export default async function handler(req, res) {
@@ -45,15 +54,21 @@ export default async function handler(req, res) {
       if (!process.env.BLOB_READ_WRITE_TOKEN) {
         return res.status(500).json({ error: 'Armazenamento não configurado: BLOB_READ_WRITE_TOKEN ausente no ambiente.' });
       }
-      const responses = await loadResponses();
       const record = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
         createdAt: new Date().toISOString(),
         ...sanitizeResponse(body),
       };
-      responses.push(record);
-      await saveResponses(responses);
-      return res.status(201).json({ ok: true, id: record.id, count: responses.length });
+      // Store público: put com access 'public'. As respostas já são
+      // anônimas (sem nome, CPF, placa ou contato) e a própria API as
+      // lista no painel do pesquisador, então o blob público não expõe
+      // nenhum dado pessoal a mais.
+      await put(`${PREFIX}${record.id}.json`, JSON.stringify(record, null, 2), {
+        access: 'public',
+        addRandomSuffix: false,
+        contentType: 'application/json',
+      });
+      return res.status(201).json({ ok: true, id: record.id });
     }
 
     if (req.method === 'DELETE') {
@@ -62,7 +77,13 @@ export default async function handler(req, res) {
       if (!adminKey || provided !== adminKey) {
         return res.status(403).json({ error: 'Chave de pesquisador inválida.' });
       }
-      await saveResponses([]);
+      const { blobs } = await list({ prefix: PREFIX });
+      const legacy = await list({ prefix: LEGACY_KEY });
+      const urls = [
+        ...blobs.map((b) => b.url),
+        ...legacy.blobs.filter((b) => b.pathname === LEGACY_KEY).map((b) => b.url),
+      ];
+      if (urls.length) await del(urls);
       return res.status(200).json({ ok: true, count: 0 });
     }
 
@@ -70,7 +91,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido.' });
   } catch (err) {
     console.error(err);
-    // Mensagem detalhada (sem segredos) para diagnosticar em produção.
     return res.status(500).json({ error: 'Erro interno ao processar a resposta.', detail: err && err.message ? err.message : String(err) });
   }
 }
