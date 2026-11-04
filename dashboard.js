@@ -95,16 +95,8 @@ function tccText() {
   const agg = currentAgg;
   const lines = [];
   lines.push('## Resultados da pesquisa de campo — ECVs de Boa Esperança (MG)');
-  if (fullAgg && fullAgg.byEcv) {
-    lines.push('');
-    lines.push('### Amostra por ECV');
-    lines.push('');
-    lines.push('| Unidade | n | D1 Satisfação (média) | D3 Preço justo (média) |');
-    lines.push('|---|---:|---:|---:|');
-    for (const [ecv, sub] of Object.entries(fullAgg.byEcv)) {
-      lines.push(`| ECV ${ecv} | ${sub.total} | ${fmt(sub.D1.mean)} | ${fmt(sub.D3.mean)} |`);
-    }
-  }
+  lines.push('');
+  lines.push('Os resultados são considerados como um todo, referentes ao conjunto das ECVs de Boa Esperança. Não há comparação entre empresas. A quebra por ECV no painel serve apenas para controle da coleta e não deve ser usada para comparar empresas no TCC.');
   lines.push('');
   lines.push(`Amostra: n = ${agg.total} respostas anônimas e voluntárias. Período: ${fmtDate(agg.firstAt)} a ${fmtDate(agg.lastAt)}.`);
   lines.push('Instrumento: SERVQUAL, versão percepção (SERVPERF), escala de 1 a 5, com opção NS/NA. NS/NA foi excluído das médias e contado à parte.');
