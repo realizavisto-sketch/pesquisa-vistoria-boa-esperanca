@@ -5,7 +5,7 @@ import { validateResponse, sanitizeResponse, ECV_NAMES } from '../lib/validate.j
 const base = (over = {}) => ({
   ecv: '1', A1: 'transferencia', A2: 'sim', A3: 'sim',
   T1: 5, T2: 4, T4: null, C1: 5, C2: 5, C3: 4, R1: 3, R2: 4, R3: 5,
-  S1: 5, S2: 5, S4: 4, E1: 5, E2: 4, E3: 5, CP1: 5, CP4: 4, D1: 5, D3: 3,
+  S1: 5, S2: 5, S4: 4, E1: 5, E2: 4, E3: 5, CP1: 5, CP4: 4, CP5: 5, CP6: 4, D1: 5, D3: 3,
   ...over,
 });
 
@@ -17,14 +17,16 @@ assert.strictEqual(ECV_NAMES['1'], 'Realiza Vistoria LTDA');
 assert.strictEqual(ECV_NAMES['4'], 'Triângulo Vistorias LTDA');
 assert.ok(validateResponse({ ...base(), T1: undefined }).length > 0);
 assert.ok(validateResponse(base({ A3: 'nao', CP1: 5 })).length > 0);
-assert.deepStrictEqual(validateResponse(base({ A3: 'nao', CP1: null, CP4: null })).filter((e) => e.includes('CP')), []);
+assert.deepStrictEqual(validateResponse(base({ A3: 'nao', CP1: null, CP4: null, CP5: null, CP6: null })).filter((e) => e.includes('CP')), []);
 assert.strictEqual(sanitizeResponse(base({ A3: 'nao' })).CP1, null);
+assert.strictEqual(sanitizeResponse(base({ A3: 'nao' })).CP5, null);
+assert.ok(validateResponse(base({ CP5: undefined })).length > 0);
 
 // Agregação: NS/NA excluído; média de Tangibilidade do respondente 1 = (5+4)/2 = 4,5.
 const responses = [
   base(),
   base({ ecv: '2', T1: 3, T2: 3, T4: 3, C1: 2, D1: 2, D3: 2, CP1: 2, CP4: 2 }),
-  base({ A3: 'nao', CP1: null, CP4: null, T1: null, T2: null, T4: null }),
+  base({ A3: 'nao', CP1: null, CP4: null, CP5: null, CP6: null, T1: null, T2: null, T4: null }),
 ];
 const agg = aggregate(responses);
 assert.strictEqual(agg.total, 3);

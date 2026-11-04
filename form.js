@@ -75,7 +75,7 @@ for (const [title, keys] of GROUPS_B) {
 }
 
 const sectionCItems = document.getElementById('sectionCItems');
-for (const key of ['CP1', 'CP4']) sectionCItems.appendChild(radioGroup(key, scaleC));
+for (const key of ['CP1', 'CP5', 'CP6', 'CP4']) sectionCItems.appendChild(radioGroup(key, scaleC));
 
 const sectionD = document.getElementById('sectionD');
 for (const key of ['D1', 'D3']) sectionD.appendChild(radioGroup(key, scaleB));
@@ -88,7 +88,7 @@ function updateCVisibility() {
   const a3 = form.querySelector('input[name="A3"]:checked')?.value;
   const show = a3 === 'sim';
   sectionC.hidden = !show;
-  for (const key of ['CP1', 'CP4']) {
+  for (const key of ['CP1', 'CP5', 'CP6', 'CP4']) {
     form.querySelectorAll(`input[name="${key}"]`).forEach((i) => { i.required = show; if (!show) i.checked = false; });
   }
 }
@@ -113,7 +113,7 @@ form.addEventListener('submit', async (e) => {
       A3: getValue('A3'),
     };
     const keys = ['T1', 'T2', 'T4', 'C1', 'C2', 'C3', 'R1', 'R2', 'R3', 'S1', 'S2', 'S4', 'E1', 'E2', 'E3', 'D1', 'D3'];
-    if (payload.A3 === 'sim') keys.push('CP1', 'CP4');
+    if (payload.A3 === 'sim') keys.push('CP1', 'CP5', 'CP6', 'CP4');
     const missing = [];
     if (!payload.ecv) missing.push('ECV');
     if (!payload.A1) missing.push('A1');

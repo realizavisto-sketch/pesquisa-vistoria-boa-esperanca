@@ -84,7 +84,7 @@ function render() {
     const s = agg.items[key];
     return `<p><strong>${key} — ${s.text}</strong>: média ${fmt(s.mean)} · n válido ${s.n} · NS/NA ${s.nsna} · melhor/muito melhor (4–5): ${pct(agg.comparison.pctMelhor(key))}</p>`;
   };
-  document.getElementById('comparison').innerHTML = cp('CP1') + cp('CP4');
+  document.getElementById('comparison').innerHTML = cp('CP1') + cp('CP5') + cp('CP6') + cp('CP4');
 
   document.getElementById('general').innerHTML =
     `<p><strong>D1 — Satisfação geral:</strong> média ${fmt(agg.items.D1.mean)} · n válido ${agg.items.D1.n} · % 4–5: ${pct(agg.items.D1.pct45)}</p>
@@ -128,6 +128,8 @@ function tccText() {
   lines.push('### Comparação com o modelo antigo (somente quem fez vistoria no modelo antigo)');
   lines.push('');
   lines.push(`- CP1 (prazo): média ${fmt(agg.items.CP1.mean)}, n válido ${agg.items.CP1.n}, melhor/muito melhor: ${pct(agg.comparison.pctMelhor('CP1'))}.`);
+  lines.push(`- CP5 (acesso/agendamento): média ${fmt(agg.items.CP5.mean)}, n válido ${agg.items.CP5.n}, melhor/muito melhor: ${pct(agg.comparison.pctMelhor('CP5'))}.`);
+  lines.push(`- CP6 (rapidez no dia): média ${fmt(agg.items.CP6.mean)}, n válido ${agg.items.CP6.n}, melhor/muito melhor: ${pct(agg.comparison.pctMelhor('CP6'))}.`);
   lines.push(`- CP4 (qualidade geral): média ${fmt(agg.items.CP4.mean)}, n válido ${agg.items.CP4.n}, melhor/muito melhor: ${pct(agg.comparison.pctMelhor('CP4'))}.`);
   lines.push('');
   lines.push('### Avaliação geral');

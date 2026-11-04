@@ -26,7 +26,7 @@ Ferramenta para aplicar, via QR Code, o questionário de pesquisa de campo do TC
 - **A1**: motivo — transferência, mudança de município, alteração de dados, regularização, outro.
 - **A2**: mora em Boa Esperança? **A3**: já fez vistoria no modelo antigo?
 - **B1 Tangibilidade**: T1, T2, T4. **B2 Confiabilidade**: C1, C2, C3. **B3 Responsividade**: R1, R2, R3. **B4 Segurança**: S1, S2, S4. **B5 Empatia**: E1, E2, E3.
-- **C**: CP1 (prazo) e CP4 (qualidade geral), escala de muito pior a muito melhor que o modelo antigo.
+- **C**: CP1 (prazo), CP5 (acesso/agendamento), CP6 (rapidez no dia) e CP4 (qualidade geral), escala de muito pior a muito melhor que o modelo antigo. CP1 e CP4 são os itens originais; CP5 e CP6 foram acrescentados pelo autor para ampliar a comparação, mantendo a redação e a escala dos originais — registrar essa ampliação na metodologia do TCC.
 - **D**: D1 (satisfação) e D3 (preço justo).
 
 ## Como usar na coleta
