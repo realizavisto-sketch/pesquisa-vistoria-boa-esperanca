@@ -39,9 +39,45 @@ function applyFilter() {
   render();
 }
 
+function renderByDay() {
+  const byDayEl = document.getElementById('byDay');
+  const byHourEl = document.getElementById('byHour');
+  if (!byDayEl || !byHourEl) return;
+  const filter = document.getElementById('ecvFilter')?.value || 'all';
+  const list = filter === 'all' ? currentResponses : currentResponses.filter((r) => (r.ecv || 'nao-identificada') === filter);
+  const dayFmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const timeFmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false });
+  const hourFmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', hour12: false });
+  const days = {};
+  const hours = {};
+  for (const r of list) {
+    if (!r.createdAt) continue;
+    const d = new Date(r.createdAt);
+    if (Number.isNaN(d.getTime())) continue;
+    const day = dayFmt.format(d);
+    const time = timeFmt.format(d);
+    if (!days[day]) days[day] = { n: 0, first: time, last: time };
+    days[day].n += 1;
+    if (time < days[day].first) days[day].first = time;
+    if (time > days[day].last) days[day].last = time;
+    const h = `${hourFmt.format(d)}h`;
+    hours[h] = (hours[h] || 0) + 1;
+  }
+  const dayRows = Object.entries(days).map(([day, s]) => {
+    const width = Math.max(...Object.values(days).map((x) => x.n), 1);
+    return `<tr><td>${day}</td><td class="num">${s.n}</td><td><div class="bar"><div style="width:${(s.n / width) * 100}%"></div></div></td><td class="num">${s.first}</td><td class="num">${s.last}</td></tr>`;
+  }).join('');
+  byDayEl.innerHTML = `<table><tr><th>Dia</th><th class="num">Pesquisas</th><th>Ritmo</th><th class="num">Primeiro envio</th><th class="num">Último envio</th></tr>${dayRows || '<tr><td colspan="5">Nenhuma resposta ainda.</td></tr>'}</table>`;
+  const hourRows = Object.entries(hours).sort(([a], [b]) => a.localeCompare(b)).map(([h, n]) => `<tr><td>${h}</td><td class="num">${n}</td></tr>`).join('');
+  byHourEl.innerHTML = hourRows
+    ? `<h3>Envios por hora do dia (horário de Brasília)</h3><table><tr><th>Hora</th><th class="num">Pesquisas</th></tr>${hourRows}</table>`
+    : '';
+}
+
 function render() {
   const agg = currentAgg;
   const full = fullAgg || agg;
+  renderByDay();
   const ECV_NAMES = {
     '1': 'Realiza Vistoria LTDA',
     '2': 'WR Vistorias LTDA',
