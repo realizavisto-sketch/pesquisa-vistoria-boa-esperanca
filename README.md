@@ -12,7 +12,7 @@ Ferramenta para aplicar, via QR Code, o questionário de pesquisa de campo do TC
   - médias, desvios-padrão e % de respostas 4–5 por dimensão SERVQUAL e por item;
   - comparação com o modelo antigo (Seção C) e avaliação geral (Seção D);
   - exportações em CSV bruto, CSV resumo, JSON e texto pronto para o TCC (tabelas em Markdown).
-- **API (`/api/responses`)**: recebe, lista e (com chave do pesquisador) apaga respostas. Os dados ficam em um Vercel Blob privado, não no navegador do respondente. O download do blob privado é feito com o token `BLOB_READ_WRITE_TOKEN` no cabeçalho Authorization — sem ele, o fetch retorna 403 e a leitura voltaria vazia.
+- **API (`/api/responses`)**: recebe, lista e (com chave do pesquisador) apaga respostas. Cada resposta é um arquivo próprio no Vercel Blob público do projeto v2 (`responses/<id>.json`), não no navegador do respondente. As respostas são anônimas (sem nome, CPF, placa ou contato) e a própria API já as lista no painel do pesquisador, então o blob público não expõe nenhum dado pessoal a mais. A primeira versão usava um store privado e um arquivo único, o que rejeitava o envio e perdia respostas — não usar a URL v1.
 
 ## Regras metodológicas aplicadas
 

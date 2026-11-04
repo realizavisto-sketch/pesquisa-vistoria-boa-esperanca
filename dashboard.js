@@ -137,7 +137,7 @@ function tccText() {
   lines.push(`- D1 (satisfação): média ${fmt(agg.items.D1.mean)}, n válido ${agg.items.D1.n}, % 4–5: ${pct(agg.items.D1.pct45)}.`);
   lines.push(`- D3 (preço justo): média ${fmt(agg.items.D3.mean)}, n válido ${agg.items.D3.n}, % 4–5: ${pct(agg.items.D3.pct45)}.`);
   lines.push('');
-  lines.push('Limitação: amostra local, por adesão voluntária, na ECV de Boa Esperança (MG). Os resultados não devem ser generalizados para todo o estado sem essa ressalva.');
+  lines.push('Limitação: amostra local, por adesão voluntária, nas ECVs de Boa Esperança (MG). Os resultados não devem ser generalizados para todo o estado sem essa ressalva.');
   return lines.join('\n');
 }
 
